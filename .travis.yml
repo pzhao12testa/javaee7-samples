@@ -1,30 +1,34 @@
-sudo: false
-language: java
-jdk:
-  - oraclejdk8
 env:
-  - TESTFOLDER=batch
-  - TESTFOLDER=cdi
-  - TESTFOLDER=concurrency
-  - TESTFOLDER=ejb
-  - TESTFOLDER=el
-  - TESTFOLDER=interceptor
-  - TESTFOLDER=jacc
-  - TESTFOLDER=jaspic
-  - TESTFOLDER=javamail
-  - TESTFOLDER=jaxrs
-  - TESTFOLDER=jaxws
-  - TESTFOLDER=jca
-  - TESTFOLDER=jms
-  - TESTFOLDER=jpa
-  - TESTFOLDER=jsf
-  - TESTFOLDER=json
-  - TESTFOLDER=jta
-  - TESTFOLDER=servlet
-  - TESTFOLDER=validation
-  - TESTFOLDER=websocket
-  
-  
+- TESTFOLDER=batch
+- TESTFOLDER=cdi
+- TESTFOLDER=concurrency
+- TESTFOLDER=ejb
+- TESTFOLDER=el
+- TESTFOLDER=interceptor
+- TESTFOLDER=jacc
+- TESTFOLDER=jaspic
+- TESTFOLDER=javamail
+- TESTFOLDER=jaxrs
+- TESTFOLDER=jaxws
+- TESTFOLDER=jca
+- TESTFOLDER=jms
+- TESTFOLDER=jpa
+- TESTFOLDER=jsf
+- TESTFOLDER=json
+- TESTFOLDER=jta
+- TESTFOLDER=servlet
+- TESTFOLDER=validation
+- TESTFOLDER=websocket
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-
-script: mvn --batch-mode --fail-at-end --projects $TESTFOLDER --also-make-dependents install 2>&1 
+jdk:
+- oraclejdk8
+language: java
+script:
+- touch /tmp/NOW
+- echo GIBSTUDYSTART $(date)
+- mvn --batch-mode --fail-at-end --projects $TESTFOLDER --also-make-dependents install
+  2>&1
+- echo GIBSTUDYEND $(date)
+- cd $TRAVIS_BUILD_DIR
+- echo TESTNUM $(find . -name TEST-*.xml -newer /tmp/NOW | wc -l)
+sudo: false
